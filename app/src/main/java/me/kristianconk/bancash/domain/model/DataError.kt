@@ -5,6 +5,7 @@ sealed interface DataError : BancashError {
         REQUEST_TIMEOUT,
         NO_INTERNET,
         SERVER_ERROR,
+        BAD_REQUEST,
         UNKNOWN
     }
 

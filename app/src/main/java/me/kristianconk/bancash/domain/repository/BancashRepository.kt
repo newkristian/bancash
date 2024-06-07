@@ -8,7 +8,7 @@ import me.kristianconk.bancash.domain.model.User
 import me.kristianconk.bancash.domain.model.UserBalance
 
 interface BancashRepository {
-    suspend fun logIn(): BancashResult<User, DataError.NetworkError>
+    suspend fun logIn(username: String, password: String): BancashResult<User, DataError.NetworkError>
 
     suspend fun signUp(): BancashResult<User, DataError.NetworkError>
 

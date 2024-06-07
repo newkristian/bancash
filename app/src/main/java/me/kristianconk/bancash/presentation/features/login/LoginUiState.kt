@@ -3,7 +3,8 @@ package me.kristianconk.bancash.presentation.features.login
 data class LoginUiState(
     val emailError: String? = null,
     val passwordError: String? = null,
-    val loginEnabled: Boolean = false
+    val loading: Boolean = false,
+    val message: String = ""
 )
 
 data class LoginActions(

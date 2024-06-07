@@ -4,44 +4,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.viewModels
+import me.kristianconk.bancash.presentation.features.login.LoginActions
+import me.kristianconk.bancash.presentation.features.login.LoginScreen
+import me.kristianconk.bancash.presentation.features.login.LoginUiState
+import me.kristianconk.bancash.presentation.features.login.LoginViewModel
+import me.kristianconk.bancash.presentation.navigation.BancashNavHos
 import me.kristianconk.bancash.ui.theme.BanCashTheme
 
 class MainActivity : ComponentActivity() {
+
+    private val loginViewModel : LoginViewModel by viewModels { LoginViewModel.Factory }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             BanCashTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                BancashNavHos(loginViewModel = loginViewModel)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BanCashTheme {
-        Greeting("Android")
     }
 }
