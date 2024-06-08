@@ -38,7 +38,12 @@ class BancashRepositoryImp(
         }
     }
 
-    override suspend fun signUp(): BancashResult<User, DataError.NetworkError> {
+    override suspend fun signUp(
+        email: String,
+        password: String,
+        name: String,
+        lastName: String
+    ): BancashResult<User, DataError.NetworkError> {
         //firebaseAuth.createUserWithEmailAndPassword()
         return BancashResult.Error(DataError.NetworkError.UNKNOWN)
     }

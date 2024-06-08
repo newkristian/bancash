@@ -41,28 +41,4 @@ class LoginViewModel(
             }
         }
     }
-
-    companion object {
-
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(
-                modelClass: Class<T>,
-                extras: CreationExtras
-            ): T {
-                // Get the Application object from extras
-                //val application = checkNotNull(extras[APPLICATION_KEY])
-                // Create a SavedStateHandle for this ViewModel from extras
-                //val savedStateHandle = extras.createSavedStateHandle()
-
-                return LoginViewModel(
-                    LoginUseCase(
-                        validator = UserDataValidator(),
-                        repository = BancashRepositoryImp(FirebaseAuth.getInstance())
-                    )
-                ) as T
-            }
-        }
-    }
-
 }

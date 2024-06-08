@@ -62,8 +62,10 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.org.koin.android)
-    implementation(libs.org.koin.viewmodel)
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
     //Firebase
     implementation(platform(libs.google.firebase.boom))
     implementation(libs.google.firebase.analytics)
