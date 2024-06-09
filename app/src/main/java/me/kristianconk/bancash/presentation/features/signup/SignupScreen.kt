@@ -1,5 +1,6 @@
 package me.kristianconk.bancash.presentation.features.signup
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,6 +33,9 @@ fun SignupScreen(
     actions: SignupActions,
     modifier: Modifier = Modifier
 ) {
+    BackHandler(enabled = true) {
+        // no esta permitido el back
+    }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -111,7 +115,9 @@ fun SignupScreen(
                     },
                     visualTransformation = PasswordVisualTransformation()
                 )
-                Button(onClick = {}) {
+                Button(onClick = {
+
+                }) {
                     Text(text = "Tomar selfie")
                 }
                 Button(onClick = actions.onSignupClick) {

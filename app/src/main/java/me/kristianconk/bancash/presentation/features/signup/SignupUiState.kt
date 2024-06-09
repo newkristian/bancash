@@ -4,7 +4,10 @@ data class SignupUiState(
     val emailError: String? = null,
     val passwordError: String? = null,
     val nameError: String? = null,
-    val lastnameError: String? = null
+    val lastnameError: String? = null,
+    val photoError: String? = null,
+    val isLoading: Boolean = false,
+    val message: String? = null
 )
 
 data class SignupActions(

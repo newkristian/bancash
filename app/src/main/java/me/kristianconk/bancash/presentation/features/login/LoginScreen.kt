@@ -1,5 +1,6 @@
 package me.kristianconk.bancash.presentation.features.login
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,6 +33,9 @@ fun LoginScreen(
     actions: LoginActions,
     modifier: Modifier = Modifier
 ) {
+    BackHandler(enabled = true) {
+        // no esta permitido el back
+    }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {

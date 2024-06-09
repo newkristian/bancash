@@ -70,7 +70,11 @@ dependencies {
     implementation(platform(libs.google.firebase.boom))
     implementation(libs.google.firebase.analytics)
     implementation(libs.google.firebase.firestore)
+    implementation(libs.google.firebase.storage)
     implementation(libs.google.firebase.auth)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
     //Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
