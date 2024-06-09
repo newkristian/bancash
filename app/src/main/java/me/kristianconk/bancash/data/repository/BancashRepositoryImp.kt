@@ -7,6 +7,13 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
+import me.kristianconk.bancash.data.utils.ACCOUNTS_DB_COLLECTION
+import me.kristianconk.bancash.data.utils.ACCOUNT_BALANCE
+import me.kristianconk.bancash.data.utils.USERS_DB_COLLECTION
+import me.kristianconk.bancash.data.utils.USER_AUTH_ID
+import me.kristianconk.bancash.data.utils.USER_EMAIL
+import me.kristianconk.bancash.data.utils.USER_LAST_NAME
+import me.kristianconk.bancash.data.utils.USER_NAME
 import me.kristianconk.bancash.domain.model.BancashResult
 import me.kristianconk.bancash.domain.model.DataError
 import me.kristianconk.bancash.domain.model.Movement
@@ -23,12 +30,17 @@ class BancashRepositoryImp(
 
     override suspend fun getCurrentLoggedUser(): User? {
         return firebaseAuth.currentUser?.let {
-            val userQuery = dbFirestore.collection("users").whereEqualTo("authId", it.uid)
+            val userQuery =
+                dbFirestore.collection(USERS_DB_COLLECTION).whereEqualTo(USER_AUTH_ID, it.uid)
             val result = userQuery.get().await()
             check(!result.isEmpty)
             val mapData = result.documents[0].data
             if (mapData != null) {
-                User(id = it.uid, username = mapData["name"].toString(), state = UserState.ACTIVE)
+                User(
+                    id = it.uid,
+                    username = mapData[USER_NAME].toString(),
+                    state = UserState.ACTIVE
+                )
             } else null
         }
     }
@@ -65,20 +77,53 @@ class BancashRepositoryImp(
         try {
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             result.user?.let {
-                val user = hashMapOf("authId" to it.uid, "email" to email, "name" to name, "lastName" to lastName)
-                dbFirestore.collection("users").add(user).await()
-                return BancashResult.Success(User(id = it.uid, username = it.displayName ?: "", state = UserState.ACTIVE))
+                val user = hashMapOf(
+                    USER_AUTH_ID to it.uid,
+                    USER_EMAIL to email,
+                    USER_NAME to name,
+                    USER_LAST_NAME to lastName
+                )
+                dbFirestore.collection(USERS_DB_COLLECTION).add(user).await()
+                return BancashResult.Success(
+                    User(
+                        id = it.uid,
+                        username = it.displayName ?: "",
+                        state = UserState.ACTIVE
+                    )
+                )
             } ?: run {
                 return BancashResult.Error(DataError.NetworkError.UNKNOWN)
             }
-        } catch (ex:Exception){
+        } catch (ex: Exception) {
             Log.w("BACHAS-REPO", "error al crear usuario")
             return BancashResult.Error(DataError.NetworkError.UNKNOWN)
         }
     }
 
     override suspend fun getBalance(): BancashResult<UserBalance, DataError.NetworkError> {
-        return BancashResult.Error(DataError.NetworkError.UNKNOWN)
+        getCurrentLoggedUser()?.let {
+            val accountQuery =
+                dbFirestore.collection(ACCOUNTS_DB_COLLECTION).whereEqualTo(USER_AUTH_ID, it.id)
+            val result = accountQuery.get().await()
+            if (result.isEmpty) {
+                // crear la cuenta y regalo bienvenida $100
+                val account = hashMapOf(USER_AUTH_ID to it.id, ACCOUNT_BALANCE to 100.0)
+                val doc = dbFirestore.collection(ACCOUNTS_DB_COLLECTION).document()
+                doc.set(account).await()
+                return BancashResult.Success(UserBalance(doc.id, 100.0))
+            } else {
+                // devolver cuenta con saldo acutal
+                val firstDoc = result.documents[0]
+                return BancashResult.Success(
+                    UserBalance(
+                        firstDoc.id,
+                        firstDoc.data?.get(ACCOUNT_BALANCE)?.toString()?.toDoubleOrNull() ?: 0.0
+                    )
+                )
+            }
+        } ?: run {
+            return BancashResult.Error(DataError.NetworkError.UNKNOWN)
+        }
     }
 
     override suspend fun getMovements(): BancashResult<List<Movement>, DataError.NetworkError> {
