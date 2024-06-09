@@ -120,7 +120,7 @@ class BancashRepositoryImp(
     override suspend fun closeSession(): Boolean {
         try {
             cachedUser = null
-            firebaseAuth.currentUser?.delete()?.await()
+            firebaseAuth.signOut()
             return true
         } catch (e: Exception){
             return false

@@ -16,7 +16,8 @@ class HomeActivity : ComponentActivity() {
         setContent {
             BanCashTheme {
                 HomeNavHost(
-                    homeViewModel = koinViewModel()
+                    homeViewModel = koinViewModel(),
+                    activity = this
                 )
             }
         }

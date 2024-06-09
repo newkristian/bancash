@@ -9,5 +9,6 @@ data class HomeUiState(
 )
 
 data class HomeActions(
+    val onSignOut: () -> Unit = {},
     val onMovementClick: (Movement) -> Unit = {}
 )

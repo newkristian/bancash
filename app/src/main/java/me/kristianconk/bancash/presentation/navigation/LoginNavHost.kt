@@ -1,23 +1,13 @@
 package me.kristianconk.bancash.presentation.navigation
 
-import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import me.kristianconk.bancash.presentation.events.BancashEvent
-import me.kristianconk.bancash.presentation.features.home.HomeActivity
 import me.kristianconk.bancash.presentation.features.login.LoginActions
 import me.kristianconk.bancash.presentation.features.login.LoginScreen
 import me.kristianconk.bancash.presentation.features.login.LoginViewModel
@@ -26,6 +16,12 @@ import me.kristianconk.bancash.presentation.features.signup.SignupScreen
 import me.kristianconk.bancash.presentation.features.signup.SignupViewModel
 import me.kristianconk.bancash.presentation.features.splash.SplashScreen
 import me.kristianconk.bancash.presentation.features.splash.SplashViewModel
+import me.kristianconk.bancash.presentation.utils.NAVHOST_ROUTE_LOGIN
+import me.kristianconk.bancash.presentation.utils.NAVHOST_ROUTE_SIGNUP
+import me.kristianconk.bancash.presentation.utils.NAVHOST_ROUTE_SPLASH
+import me.kristianconk.bancash.presentation.utils.NAV_ACTIVITY_HOME
+import me.kristianconk.bancash.presentation.utils.NavUtils
+import me.kristianconk.bancash.presentation.utils.observeWithLifecycle
 
 @Composable
 fun LoginNavHost(
@@ -36,24 +32,24 @@ fun LoginNavHost(
 ) {
     val navController = rememberNavController()
     signupViewModel.sideEffects.observeWithLifecycle {
-        if (it is BancashEvent.NavigateTo && it.destination == "HOME") {
-            navToHome(activity)
+        if (it is BancashEvent.NavigateTo && it.destination == NAV_ACTIVITY_HOME) {
+            NavUtils.navToHome(activity)
         }
     }
 
-    NavHost(navController = navController, startDestination = "splash") {
-        composable(route = "splash") {
+    NavHost(navController = navController, startDestination = NAVHOST_ROUTE_SPLASH) {
+        composable(route = NAVHOST_ROUTE_SPLASH) {
             SplashScreen(
                 inSession = splashViewModel::existsUserInSession,
-                navToHome = { navToHome(activity) },
+                navToHome = { NavUtils.navToHome(activity) },
                 navToLogin = {
                     navController.navigate(
-                        route = "login",
+                        route = NAVHOST_ROUTE_LOGIN,
                         navOptions = NavOptions.Builder().apply { setLaunchSingleTop(true) }.build()
                     )
                 })
         }
-        composable(route = "login") {
+        composable(route = NAVHOST_ROUTE_LOGIN) {
             val loginState = loginViewModel.uiState.collectAsState().value
             LoginScreen(
                 state = loginState,
@@ -63,7 +59,7 @@ fun LoginNavHost(
                     onLoginClick = loginViewModel::onLoginClick,
                     onRegisterClick = {
                         navController.navigate(
-                            route = "register",
+                            route = NAVHOST_ROUTE_SIGNUP,
                             navOptions = NavOptions.Builder().apply { setLaunchSingleTop(true) }
                                 .build()
                         )
@@ -71,7 +67,7 @@ fun LoginNavHost(
                 )
             )
         }
-        composable(route = "register") {
+        composable(route = NAVHOST_ROUTE_SIGNUP) {
             val signupState = signupViewModel.uiState.collectAsState().value
             SignupScreen(state = signupState, actions = SignupActions(
                 onEmailChange = signupViewModel::onEmailChanges,
@@ -81,31 +77,11 @@ fun LoginNavHost(
                 onSignupClick = signupViewModel::onSignupClick,
                 onLoginClick = {
                     navController.navigate(
-                        route = "login",
+                        route = NAVHOST_ROUTE_LOGIN,
                         navOptions = NavOptions.Builder().apply { setLaunchSingleTop(true) }.build()
                     )
                 }
             ))
-        }
-    }
-}
-
-
-private fun navToHome(activity: ComponentActivity) {
-    val i = Intent(activity, HomeActivity::class.java)
-    activity.startActivity(i)
-    activity.finish()
-}
-
-@Composable
-inline fun <reified T> Flow<T>.observeWithLifecycle(
-    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
-    minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
-    noinline action: suspend (T) -> Unit
-) {
-    LaunchedEffect(key1 = Unit) {
-        lifecycleOwner.lifecycleScope.launch {
-            flowWithLifecycle(lifecycleOwner.lifecycle, minActiveState).collect(action)
         }
     }
 }
