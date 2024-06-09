@@ -1,5 +1,6 @@
 package me.kristianconk.bancash.data.repository
 
+import android.content.SharedPreferences
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -19,6 +20,19 @@ class BancashRepositoryImp(
     val storage: FirebaseStorage,
     val dbFirestore: FirebaseFirestore
 ) : BancashRepository {
+
+    override suspend fun getCurrentLoggedUser(): User? {
+        return firebaseAuth.currentUser?.let {
+            val userQuery = dbFirestore.collection("users").whereEqualTo("authId", it.uid)
+            val result = userQuery.get().await()
+            check(!result.isEmpty)
+            val mapData = result.documents[0].data
+            if (mapData != null) {
+                User(id = it.uid, username = mapData["name"].toString(), state = UserState.ACTIVE)
+            } else null
+        }
+    }
+
     override suspend fun logIn(
         username: String,
         password: String

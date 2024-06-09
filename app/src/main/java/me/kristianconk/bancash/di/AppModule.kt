@@ -10,6 +10,7 @@ import me.kristianconk.bancash.domain.usecases.SignUpUseCase
 import me.kristianconk.bancash.domain.utils.UserDataValidator
 import me.kristianconk.bancash.presentation.features.login.LoginViewModel
 import me.kristianconk.bancash.presentation.features.signup.SignupViewModel
+import me.kristianconk.bancash.presentation.features.splash.SplashViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -26,4 +27,5 @@ val appModule = module {
     factory { SignUpUseCase(get(), get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { SignupViewModel(get()) }
+    viewModel { SplashViewModel(get()) }
 }

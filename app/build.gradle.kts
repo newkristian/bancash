@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
+    implementation(libs.airbnb.lottie.compose)
     //Firebase
     implementation(platform(libs.google.firebase.boom))
     implementation(libs.google.firebase.analytics)

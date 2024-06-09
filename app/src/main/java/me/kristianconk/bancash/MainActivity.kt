@@ -18,6 +18,7 @@ class MainActivity : ComponentActivity() {
                 LoginNavHost(
                     loginViewModel = koinViewModel(),
                     signupViewModel = koinViewModel(),
+                    splashViewModel = koinViewModel(),
                     activity = this
                 )
             }

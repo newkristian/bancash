@@ -24,23 +24,35 @@ import me.kristianconk.bancash.presentation.features.login.LoginViewModel
 import me.kristianconk.bancash.presentation.features.signup.SignupActions
 import me.kristianconk.bancash.presentation.features.signup.SignupScreen
 import me.kristianconk.bancash.presentation.features.signup.SignupViewModel
+import me.kristianconk.bancash.presentation.features.splash.SplashScreen
+import me.kristianconk.bancash.presentation.features.splash.SplashViewModel
 
 @Composable
 fun LoginNavHost(
     loginViewModel: LoginViewModel,
     signupViewModel: SignupViewModel,
+    splashViewModel: SplashViewModel,
     activity: ComponentActivity
 ) {
     val navController = rememberNavController()
     signupViewModel.sideEffects.observeWithLifecycle {
         if (it is BancashEvent.NavigateTo && it.destination == "HOME") {
-            val i = Intent(activity, HomeActivity::class.java)
-            activity.startActivity(i)
-            activity.finish()
+            navToHome(activity)
         }
     }
 
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "splash") {
+        composable(route = "splash") {
+            SplashScreen(
+                inSession = splashViewModel::existsUserInSession,
+                navToHome = { navToHome(activity) },
+                navToLogin = {
+                    navController.navigate(
+                        route = "login",
+                        navOptions = NavOptions.Builder().apply { setLaunchSingleTop(true) }.build()
+                    )
+                })
+        }
         composable(route = "login") {
             val loginState = loginViewModel.uiState.collectAsState().value
             LoginScreen(
@@ -76,6 +88,13 @@ fun LoginNavHost(
             ))
         }
     }
+}
+
+
+private fun navToHome(activity: ComponentActivity) {
+    val i = Intent(activity, HomeActivity::class.java)
+    activity.startActivity(i)
+    activity.finish()
 }
 
 @Composable

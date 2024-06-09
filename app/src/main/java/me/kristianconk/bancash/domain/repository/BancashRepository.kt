@@ -8,6 +8,9 @@ import me.kristianconk.bancash.domain.model.User
 import me.kristianconk.bancash.domain.model.UserBalance
 
 interface BancashRepository {
+
+    suspend fun getCurrentLoggedUser(): User?
+
     suspend fun logIn(
         username: String,
         password: String
