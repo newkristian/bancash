@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,7 +25,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.kristianconk.bancash.R
+import me.kristianconk.bancash.domain.model.Movement
+import me.kristianconk.bancash.domain.model.MovementType
+import me.kristianconk.bancash.presentation.features.movements.MovementRow
 import me.kristianconk.bancash.ui.theme.BanCashTheme
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,12 +61,16 @@ fun HomeScreen(
         LazyColumn(
             modifier = Modifier
                 .padding(paddVals)
-                .fillMaxSize()
+                .fillMaxSize(),
+
         ) {
             uiState.balance?.let {
                 item(key = "balance") {
                     BalanceSection(balance = it)
                 }
+            }
+            items(items = uiState.movements, key = { it.id }) {
+                MovementRow(movement = it)
             }
         }
     }
@@ -97,7 +106,31 @@ fun BalanceSection(balance: Double, modifier: Modifier = Modifier) {
 fun HomeScreenPreview(modifier: Modifier = Modifier) {
     BanCashTheme {
         HomeScreen(
-            uiState = HomeUiState(userName = "Alfonso", balance = 1347.50),
+            uiState = HomeUiState(
+                userName = "Alfonso", balance = 1347.50, movements = listOf(
+                    Movement(
+                        id = "1234",
+                        dateTime = LocalDateTime.now(),
+                        amount = 100.0,
+                        type = MovementType.PAYMENT,
+                        description = "promocion aplicada"
+                    ),
+                    Movement(
+                        id = "2345",
+                        dateTime = LocalDateTime.now(),
+                        amount = 100.0,
+                        type = MovementType.WITHDRAW,
+                        description = "promocion aplicada"
+                    ),
+                    Movement(
+                        id = "asdfg",
+                        dateTime = LocalDateTime.now(),
+                        amount = 100.0,
+                        type = MovementType.PURCHASE,
+                        description = "promocion aplicada"
+                    )
+                )
+            ),
             actions = HomeActions()
         )
     }

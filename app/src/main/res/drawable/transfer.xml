@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="48dp" android:viewportHeight="64" android:viewportWidth="64" android:width="48dp">
+      
+    <path android:fillColor="#FF000000" android:pathData="M23,39a3,3 0,0 0,3 3L38,42a3,3 0,0 0,3 -3L41,17a3,3 0,0 0,-3 -3L33,14L33,10L31,10v4L26,14a3,3 0,0 0,-3 3ZM38,40L26,40a1,1 0,0 1,-1 -1L39,39A1,1 0,0 1,38 40ZM25,37L25,19L39,19L39,37ZM26,16L38,16a1,1 0,0 1,1 1L25,17A1,1 0,0 1,26 16Z"/>
+      
+    <path android:fillColor="#FF000000" android:pathData="M32,7m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0"/>
+      
+    <path android:fillColor="#FF000000" android:pathData="M27.763,4.348a4.99,4.99 0,0 0,0 5.3l1.694,-1.064a2.988,2.988 0,0 1,0 -3.176zM36.237,9.652a4.99,4.99 0,0 0,0 -5.3L34.543,5.412a2.988,2.988 0,0 1,0 3.176zM24.373,2.219a9.011,9.011 0,0 0,0 9.562l1.7,-1.062a7.009,7.009 0,0 1,0 -7.438zM39.627,11.781a9.011,9.011 0,0 0,0 -9.562l-1.7,1.062a7.009,7.009 0,0 1,0 7.438zM58,49L56.969,49a5,5 0,1 0,-5.938 0L50,49a4,4 0,0 0,-4 4v9h2L48,53a2,2 0,0 1,2 -2h8a2,2 0,0 1,2 2v9h2L62,53A4,4 0,0 0,58 49zM54,42a3,3 0,1 1,-3 3A3,3 0,0 1,54 42z"/>
+      
+    <path android:fillColor="#FF000000" android:pathData="M49,53h2v9h-2z"/>
+      
+    <path android:fillColor="#FF000000" android:pathData="M57,53h2v9h-2z"/>
+      
+    <path android:fillColor="#FF000000" android:pathData="M4,53a2,2 0,0 1,2 -2h8a2,2 0,0 1,2 2v9h2L18,53a4,4 0,0 0,-4 -4L12.969,49a5,5 0,1 0,-5.938 0L6,49a4,4 0,0 0,-4 4v9L4,62ZM10,42a3,3 0,1 1,-3 3A3,3 0,0 1,10 42Z"/>
+      
+    <path android:fillColor="#FF000000" android:pathData="M5,53h2v9h-2z"/>
+      
+    <path android:fillColor="#FF000000" android:pathData="M13,53h2v9h-2z"/>
+      
+    <path android:fillColor="#FF000000" android:pathData="M21.293,54.707l3,3 1.414,-1.414L24.414,55H39.586l-1.293,1.293 1.414,1.414 3,-3a1,1 0,0 0,0 -1.414l-3,-3 -1.414,1.414L39.586,53H24.414l1.293,-1.293 -1.414,-1.414 -3,3A1,1 0,0 0,21.293 54.707zM32.75,27h-1.5A1.148,1.148 0,0 1,30 26a1.148,1.148 0,0 1,1.25 -1h1.5A1.148,1.148 0,0 1,34 26h2a3.1,3.1 0,0 0,-3 -2.977V22H31v1.023A3.1,3.1 0,0 0,28 26a3.136,3.136 0,0 0,3.25 3h1.5a1.025,1.025 0,1 1,0 2h-1.5A1.148,1.148 0,0 1,30 30H28a3.1,3.1 0,0 0,3 2.977V34h2V32.977A3.1,3.1 0,0 0,36 30,3.136 3.136,0 0,0 32.75,27z"/>
+    
+</vector>

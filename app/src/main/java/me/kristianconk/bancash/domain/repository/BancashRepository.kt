@@ -23,6 +23,8 @@ interface BancashRepository {
         lastName: String
     ): BancashResult<User, DataError.NetworkError>
 
+    suspend fun closeSession(): Boolean
+
     suspend fun getBalance(): BancashResult<UserBalance, DataError.NetworkError>
 
     suspend fun getMovements(): BancashResult<List<Movement>, DataError.NetworkError>

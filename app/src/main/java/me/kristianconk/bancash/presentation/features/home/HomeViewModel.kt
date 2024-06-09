@@ -28,6 +28,9 @@ class HomeViewModel(
             balanceUseCase.execute()?.let{ balance ->
                 _uiState.update { it.copy(balance = balance.accountBalance) }
             }
+            movementsUseCase.execute().run {
+                _uiState.update { it.copy(movements = this) }
+            }
         }
     }
 
