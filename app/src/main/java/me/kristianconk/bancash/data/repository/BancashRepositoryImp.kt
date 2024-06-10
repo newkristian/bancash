@@ -1,7 +1,9 @@
 package me.kristianconk.bancash.data.repository
 
-import android.content.SharedPreferences
+import android.content.Context
+import android.net.Uri
 import android.util.Log
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.firestore.FieldValue
@@ -18,6 +20,8 @@ import me.kristianconk.bancash.data.utils.MOVEMENT_DESCRIPTION
 import me.kristianconk.bancash.data.utils.MOVEMENT_TYPE
 import me.kristianconk.bancash.data.utils.USERS_DB_COLLECTION
 import me.kristianconk.bancash.data.utils.USER_AUTH_ID
+import me.kristianconk.bancash.data.utils.USER_AVATAR_FILENAME
+import me.kristianconk.bancash.data.utils.USER_AVATAR_URL
 import me.kristianconk.bancash.data.utils.USER_EMAIL
 import me.kristianconk.bancash.data.utils.USER_LAST_NAME
 import me.kristianconk.bancash.data.utils.USER_NAME
@@ -30,8 +34,10 @@ import me.kristianconk.bancash.domain.model.UserBalance
 import me.kristianconk.bancash.domain.model.UserState
 import me.kristianconk.bancash.domain.repository.BancashRepository
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 class BancashRepositoryImp(
+    val appContext: Context,
     val firebaseAuth: FirebaseAuth,
     val storage: FirebaseStorage,
     val dbFirestore: FirebaseFirestore
@@ -54,7 +60,8 @@ class BancashRepositoryImp(
                 User(
                     id = firebaseUser.uid,
                     username = mapData[USER_NAME].toString(),
-                    state = UserState.ACTIVE
+                    state = UserState.ACTIVE,
+                    avatarUrl = mapData[USER_AVATAR_URL].toString()
                 ).also {
                     cachedUser = it
                 }
@@ -89,16 +96,20 @@ class BancashRepositoryImp(
         email: String,
         password: String,
         name: String,
-        lastName: String
+        lastName: String,
+        avatarUri: Uri
     ): BancashResult<User, DataError.NetworkError> {
         try {
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             result.user?.let {
+                val avatarUrl = uploadPicture(avatarUri)
                 val user = hashMapOf(
                     USER_AUTH_ID to it.uid,
                     USER_EMAIL to email,
                     USER_NAME to name,
-                    USER_LAST_NAME to lastName
+                    USER_LAST_NAME to lastName,
+                    USER_AVATAR_URL to avatarUrl,
+                    USER_AVATAR_FILENAME to avatarUri.lastPathSegment
                 )
                 dbFirestore.collection(USERS_DB_COLLECTION).add(user).await()
                 return BancashResult.Success(
@@ -122,8 +133,25 @@ class BancashRepositoryImp(
             cachedUser = null
             firebaseAuth.signOut()
             return true
-        } catch (e: Exception){
+        } catch (e: Exception) {
             return false
+        }
+    }
+
+    override suspend fun uploadPicture(uri: Uri): Uri {
+        try {
+            val ref = storage.reference.child("bancash_avatars/${uri.lastPathSegment}")
+            // get stream
+            appContext.contentResolver.openAssetFileDescriptor(uri, "r")?.let {
+                val stream = it.createInputStream()
+                val resultUpload = ref.putStream(stream).await()
+                val resultUrl = resultUpload.storage.downloadUrl.await()
+                return resultUrl
+            }
+            return Uri.EMPTY
+        } catch (ex: Exception) {
+            Log.e("BANCASH-REPO", "error al subir foto", ex)
+            return Uri.EMPTY
         }
     }
 
@@ -171,10 +199,16 @@ class BancashRepositoryImp(
                 val result = movementsQuery.get().await()
                 val listMovements = result.documents.map {
                     val data = it.data
-                    Log.d("MOVEMENTS", data.toString())
+                    val t = (data?.get(MOVEMENT_DATETIME) as? Timestamp)?.let { timeStamp ->
+                        LocalDateTime.ofEpochSecond(
+                            timeStamp.seconds,
+                            timeStamp.nanoseconds,
+                            ZoneOffset.UTC
+                        )
+                    } ?: LocalDateTime.now()
                     Movement(
                         id = it.id,
-                        dateTime = LocalDateTime.now(),
+                        dateTime = t,
                         amount = data?.get(MOVEMENT_AMOUNT)?.toString()?.toDoubleOrNull() ?: 0.0,
                         type = MovementType.valueOf(
                             data?.get(MOVEMENT_TYPE)?.toString() ?: "UNKNOWN"

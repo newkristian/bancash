@@ -16,6 +16,7 @@ appcompat = "1.6.1"
 material = "1.10.0"
 activity = "1.9.0"
 lottieCompose = "6.4.1"
+coil = "2.6.0"
 
 
 [libraries]
@@ -48,6 +49,7 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 airbnb-lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottieCompose" }
+io-coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

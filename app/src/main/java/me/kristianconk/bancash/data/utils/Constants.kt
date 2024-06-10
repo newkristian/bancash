@@ -9,6 +9,8 @@ const val USER_AUTH_ID = "authId"
 const val USER_NAME = "name"
 const val USER_LAST_NAME = "lastName"
 const val USER_EMAIL = "email"
+const val USER_AVATAR_URL = "avatarUrl"
+const val USER_AVATAR_FILENAME = "avatarFilename"
 
 const val ACCOUNT_BALANCE = "balance"
 const val ACCOUNT_ID = "accountId"

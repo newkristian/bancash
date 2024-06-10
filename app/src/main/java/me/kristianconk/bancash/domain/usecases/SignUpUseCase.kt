@@ -11,6 +11,7 @@ class SignUpUseCase(
     val validator: UserDataValidator
 ) {
     suspend fun execute(email: String, password: String, name: String, lastName: String, photoUri: Uri?): SignupResult {
+
         if(name.isBlank()) {
             return SignupResult.NAME_EMPTY
         }
@@ -29,7 +30,10 @@ class SignUpUseCase(
         if(!validator.isValidPassword(password)){
             return SignupResult.INVALID_PASSWORD
         }
-        return when(val repoRes = repository.signUp(email, password, name, lastName)){
+        if (photoUri == null) {
+            return SignupResult.REQUIRES_PHOTO
+        }
+        return when(val repoRes = repository.signUp(email, password, name, lastName, photoUri)) {
             is BancashResult.Error -> {
                 when(repoRes.error) {
                     DataError.NetworkError.REQUEST_TIMEOUT -> SignupResult.EXTERNAL_ERROR

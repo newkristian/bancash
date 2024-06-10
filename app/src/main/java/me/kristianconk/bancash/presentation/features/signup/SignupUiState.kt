@@ -1,5 +1,7 @@
 package me.kristianconk.bancash.presentation.features.signup
 
+import android.net.Uri
+
 data class SignupUiState(
     val emailError: String? = null,
     val passwordError: String? = null,
@@ -15,7 +17,7 @@ data class SignupActions(
     val onPasswordChange: (String) -> Unit = {},
     val onNameChange: (String) -> Unit = {},
     val onLastNameChange: (String) -> Unit = {},
-    val onPhotoClick: () -> Unit = {},
+    val onPhotoSelected: (Uri) -> Unit = {},
     val onSignupClick: () -> Unit = {},
     val onLoginClick: () -> Unit = {}
 )

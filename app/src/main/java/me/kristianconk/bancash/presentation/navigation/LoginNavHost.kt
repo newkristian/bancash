@@ -2,12 +2,12 @@ package me.kristianconk.bancash.presentation.navigation
 
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import me.kristianconk.bancash.presentation.events.BancashEvent
 import me.kristianconk.bancash.presentation.features.login.LoginActions
 import me.kristianconk.bancash.presentation.features.login.LoginScreen
 import me.kristianconk.bancash.presentation.features.login.LoginViewModel
@@ -21,7 +21,6 @@ import me.kristianconk.bancash.presentation.utils.NAVHOST_ROUTE_SIGNUP
 import me.kristianconk.bancash.presentation.utils.NAVHOST_ROUTE_SPLASH
 import me.kristianconk.bancash.presentation.utils.NAV_ACTIVITY_HOME
 import me.kristianconk.bancash.presentation.utils.NavUtils
-import me.kristianconk.bancash.presentation.utils.observeWithLifecycle
 
 @Composable
 fun LoginNavHost(
@@ -31,12 +30,14 @@ fun LoginNavHost(
     activity: ComponentActivity
 ) {
     val navController = rememberNavController()
-    signupViewModel.sideEffects.observeWithLifecycle {
-        if (it is BancashEvent.NavigateTo && it.destination == NAV_ACTIVITY_HOME) {
-            NavUtils.navToHome(activity)
+    val sideEffect = signupViewModel.sideEffects.collectAsState().value
+    LaunchedEffect(key1 = sideEffect) {
+        sideEffect.getIfNotConsumed()?.let {
+            if ((it as String) == NAV_ACTIVITY_HOME) {
+                NavUtils.navToHome(activity)
+            }
         }
     }
-
     NavHost(navController = navController, startDestination = NAVHOST_ROUTE_SPLASH) {
         composable(route = NAVHOST_ROUTE_SPLASH) {
             SplashScreen(
@@ -74,6 +75,7 @@ fun LoginNavHost(
                 onPasswordChange = signupViewModel::onPasswordChanges,
                 onNameChange = signupViewModel::onNameChanges,
                 onLastNameChange = signupViewModel::onLastNameChanges,
+                onPhotoSelected = signupViewModel::onPhotoSelected,
                 onSignupClick = signupViewModel::onSignupClick,
                 onLoginClick = {
                     navController.navigate(

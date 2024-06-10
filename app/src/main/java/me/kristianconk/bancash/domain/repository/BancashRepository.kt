@@ -1,6 +1,6 @@
 package me.kristianconk.bancash.domain.repository
 
-import kotlinx.coroutines.flow.Flow
+import android.net.Uri
 import me.kristianconk.bancash.domain.model.BancashResult
 import me.kristianconk.bancash.domain.model.DataError
 import me.kristianconk.bancash.domain.model.Movement
@@ -20,10 +20,13 @@ interface BancashRepository {
         email: String,
         password: String,
         name: String,
-        lastName: String
+        lastName: String,
+        avatarUri: Uri
     ): BancashResult<User, DataError.NetworkError>
 
     suspend fun closeSession(): Boolean
+
+    suspend fun uploadPicture(uri: Uri): Uri
 
     suspend fun getBalance(): BancashResult<UserBalance, DataError.NetworkError>
 

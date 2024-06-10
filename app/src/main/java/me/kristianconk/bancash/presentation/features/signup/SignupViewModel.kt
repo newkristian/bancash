@@ -3,14 +3,13 @@ package me.kristianconk.bancash.presentation.features.signup
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.kristianconk.bancash.domain.usecases.SignUpUseCase
 import me.kristianconk.bancash.presentation.events.BancashEvent
+import java.io.File
 
 class SignupViewModel(
     val useCase: SignUpUseCase
@@ -20,10 +19,11 @@ class SignupViewModel(
     private var _email: String = ""
     private var _password: String = ""
     private var _photo: Uri? = null
+    private var _photoFile: File? = null
     private val _uiState = MutableStateFlow(SignupUiState())
-    private val _sideEffects = Channel<BancashEvent>()
+    private val _sideEffects = MutableStateFlow(BancashEvent(""))
     val uiState = _uiState.asStateFlow()
-    val sideEffects = _sideEffects.consumeAsFlow()
+    val sideEffects = _sideEffects.asStateFlow()
 
     fun onNameChanges(name: String) {
         _name = name
@@ -41,8 +41,9 @@ class SignupViewModel(
         _password = password
     }
 
-    fun onPhotoSelected(photoUri: Uri) {
+    fun onPhotoSelected(photoUri: Uri, file: File) {
         _photo = photoUri
+        _photoFile = file
     }
 
     fun onSignupClick() {
@@ -52,7 +53,7 @@ class SignupViewModel(
             when (result) {
                 SignUpUseCase.SignupResult.SUCCESS -> {
                     _uiState.value = SignupUiState()
-                    _sideEffects.send(BancashEvent.NavigateTo("HOME"))
+                    _sideEffects.value = BancashEvent("HOME")
                 }
 
                 SignUpUseCase.SignupResult.EMAIL_EMPTY -> _uiState.update { it.copy(emailError = "No puede ser vacío") }

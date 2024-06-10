@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import me.kristianconk.bancash.presentation.components.ImagePicker
 import me.kristianconk.bancash.ui.theme.BanCashTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -115,11 +118,7 @@ fun SignupScreen(
                     },
                     visualTransformation = PasswordVisualTransformation()
                 )
-                Button(onClick = {
-
-                }) {
-                    Text(text = "Tomar selfie")
-                }
+                ImagePicker(onImageSelected = actions.onPhotoSelected, modifier = Modifier.size(width = 180.dp, height = 180.dp))
                 Button(onClick = actions.onSignupClick) {
                     Text(text = "Registrar")
                 }

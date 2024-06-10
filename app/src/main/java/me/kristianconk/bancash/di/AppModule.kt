@@ -20,6 +20,7 @@ import org.koin.dsl.module
 val appModule = module {
     single<BancashRepository> {
         BancashRepositoryImp(
+            get(),
             FirebaseAuth.getInstance(),
             FirebaseStorage.getInstance(),
             FirebaseFirestore.getInstance()

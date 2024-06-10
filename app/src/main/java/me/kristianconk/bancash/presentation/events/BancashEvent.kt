@@ -1,6 +1,13 @@
 package me.kristianconk.bancash.presentation.events
 
-sealed class BancashEvent {
-    object  Empty: BancashEvent()
-    data class NavigateTo(val destination: String): BancashEvent()
+class BancashEvent<T>(val data: T) {
+
+    private var consumed = false
+    fun getIfNotConsumed(): Any? {
+        if(!consumed) {
+            consumed = true
+            return data
+        }
+        return null
+    }
 }

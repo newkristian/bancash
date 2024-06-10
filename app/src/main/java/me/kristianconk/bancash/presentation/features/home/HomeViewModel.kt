@@ -25,8 +25,8 @@ class HomeViewModel(
     private val _uiState = MutableStateFlow(HomeUiState(userName = ""))
     val uiState = _uiState.asStateFlow()
 
-    private val _sideEffects = Channel<BancashEvent>()
-    val sideEffects = _sideEffects.consumeAsFlow()
+    private val _sideEffects = MutableStateFlow(BancashEvent(""))
+    val sideEffects = _sideEffects.asStateFlow()
     var selectedMovement: Movement? = null
         private set
 
@@ -48,14 +48,14 @@ class HomeViewModel(
     fun onMovementClick(movement: Movement) {
         viewModelScope.launch {
             selectedMovement = movement
-            _sideEffects.send(BancashEvent.NavigateTo(NAVHOST_ROUTE_MOVEMENT_DETAIL))
+            _sideEffects.value = BancashEvent(NAVHOST_ROUTE_MOVEMENT_DETAIL)
         }
     }
 
     fun onSignOut() {
         viewModelScope.launch {
             if (repository.closeSession()) {
-                _sideEffects.send(BancashEvent.NavigateTo(NAV_ACTIVITY_LOGIN))
+                _sideEffects.value = BancashEvent(NAV_ACTIVITY_LOGIN)
             }
         }
     }
