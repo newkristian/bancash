@@ -34,7 +34,7 @@ class HomeViewModel(
     init {
         viewModelScope.launch {
             repository.getCurrentLoggedUser()?.let { user ->
-                _uiState.update { it.copy(userName = user.username) }
+                _uiState.update { it.copy(userName = user.username, avatarUrl = user.avatarUrl) }
             }
             balanceUseCase.execute()?.let { balance ->
                 _uiState.update { it.copy(balance = balance.accountBalance) }
