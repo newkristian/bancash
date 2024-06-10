@@ -8,6 +8,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import me.kristianconk.bancash.presentation.components.LoadingScreen
 import me.kristianconk.bancash.presentation.features.login.LoginActions
 import me.kristianconk.bancash.presentation.features.login.LoginScreen
 import me.kristianconk.bancash.presentation.features.login.LoginViewModel
@@ -30,9 +31,17 @@ fun LoginNavHost(
     activity: ComponentActivity
 ) {
     val navController = rememberNavController()
-    val sideEffect = signupViewModel.sideEffects.collectAsState().value
-    LaunchedEffect(key1 = sideEffect) {
-        sideEffect.getIfNotConsumed()?.let {
+    val sideEffectSignup = signupViewModel.sideEffects.collectAsState().value
+    val sideEffectLogin = loginViewModel.sideEffects.collectAsState().value
+    LaunchedEffect(key1 = sideEffectSignup) {
+        sideEffectSignup.getIfNotConsumed()?.let {
+            if ((it as String) == NAV_ACTIVITY_HOME) {
+                NavUtils.navToHome(activity)
+            }
+        }
+    }
+    LaunchedEffect(key1 = sideEffectLogin) {
+        sideEffectLogin.getIfNotConsumed()?.let {
             if ((it as String) == NAV_ACTIVITY_HOME) {
                 NavUtils.navToHome(activity)
             }
@@ -52,38 +61,47 @@ fun LoginNavHost(
         }
         composable(route = NAVHOST_ROUTE_LOGIN) {
             val loginState = loginViewModel.uiState.collectAsState().value
-            LoginScreen(
-                state = loginState,
-                actions = LoginActions(
-                    onEmailChange = loginViewModel::onUserChanges,
-                    onPasswordChange = loginViewModel::onPassChanges,
-                    onLoginClick = loginViewModel::onLoginClick,
-                    onRegisterClick = {
+            if (loginState.loading) {
+                LoadingScreen()
+            } else {
+                LoginScreen(
+                    state = loginState,
+                    actions = LoginActions(
+                        onEmailChange = loginViewModel::onUserChanges,
+                        onPasswordChange = loginViewModel::onPassChanges,
+                        onLoginClick = loginViewModel::onLoginClick,
+                        onRegisterClick = {
+                            navController.navigate(
+                                route = NAVHOST_ROUTE_SIGNUP,
+                                navOptions = NavOptions.Builder().apply { setLaunchSingleTop(true) }
+                                    .build()
+                            )
+                        }
+                    )
+                )
+            }
+        }
+        composable(route = NAVHOST_ROUTE_SIGNUP) {
+            val signupState = signupViewModel.uiState.collectAsState().value
+            if(signupState.isLoading) {
+                LoadingScreen()
+            } else {
+                SignupScreen(state = signupState, actions = SignupActions(
+                    onEmailChange = signupViewModel::onEmailChanges,
+                    onPasswordChange = signupViewModel::onPasswordChanges,
+                    onNameChange = signupViewModel::onNameChanges,
+                    onLastNameChange = signupViewModel::onLastNameChanges,
+                    onPhotoSelected = signupViewModel::onPhotoSelected,
+                    onSignupClick = signupViewModel::onSignupClick,
+                    onLoginClick = {
                         navController.navigate(
-                            route = NAVHOST_ROUTE_SIGNUP,
+                            route = NAVHOST_ROUTE_LOGIN,
                             navOptions = NavOptions.Builder().apply { setLaunchSingleTop(true) }
                                 .build()
                         )
                     }
-                )
-            )
-        }
-        composable(route = NAVHOST_ROUTE_SIGNUP) {
-            val signupState = signupViewModel.uiState.collectAsState().value
-            SignupScreen(state = signupState, actions = SignupActions(
-                onEmailChange = signupViewModel::onEmailChanges,
-                onPasswordChange = signupViewModel::onPasswordChanges,
-                onNameChange = signupViewModel::onNameChanges,
-                onLastNameChange = signupViewModel::onLastNameChanges,
-                onPhotoSelected = signupViewModel::onPhotoSelected,
-                onSignupClick = signupViewModel::onSignupClick,
-                onLoginClick = {
-                    navController.navigate(
-                        route = NAVHOST_ROUTE_LOGIN,
-                        navOptions = NavOptions.Builder().apply { setLaunchSingleTop(true) }.build()
-                    )
-                }
-            ))
+                ))
+            }
         }
     }
 }

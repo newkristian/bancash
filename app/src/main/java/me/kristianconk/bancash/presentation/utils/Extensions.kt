@@ -6,6 +6,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -13,6 +14,8 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import me.kristianconk.bancash.R
+import me.kristianconk.bancash.domain.model.MovementType
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -41,4 +44,38 @@ fun Context.createImageFile(): File {
         externalCacheDir
     )
     return image
+}
+
+
+fun getVectorForMovementType(type: MovementType): Int {
+    return when (type) {
+        MovementType.PAYMENT -> R.drawable.payment
+        MovementType.WITHDRAW -> R.drawable.withdraw
+        MovementType.PURCHASE -> R.drawable.purchase
+        MovementType.REFUND -> R.drawable.refund
+        MovementType.TRANSFER -> R.drawable.transfer
+        MovementType.UNKNOWN -> R.drawable.error
+    }
+}
+
+fun getTextForMovementType(type: MovementType): String {
+    return when (type) {
+        MovementType.PAYMENT -> "Depósito"
+        MovementType.WITHDRAW -> "Retiro"
+        MovementType.PURCHASE -> "Compra"
+        MovementType.REFUND -> "Reembolso"
+        MovementType.TRANSFER -> "Transferencia"
+        MovementType.UNKNOWN -> "Desconocido"
+    }
+}
+
+fun getColorForMovementType(type: MovementType): Color {
+    return when(type) {
+        MovementType.PAYMENT -> Color.Green
+        MovementType.WITHDRAW -> Color.Yellow
+        MovementType.PURCHASE -> Color.Red
+        MovementType.REFUND -> Color.Green
+        MovementType.TRANSFER -> Color.Blue
+        MovementType.UNKNOWN -> Color.Gray
+    }
 }

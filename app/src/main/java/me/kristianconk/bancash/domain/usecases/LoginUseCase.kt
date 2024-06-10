@@ -16,6 +16,9 @@ class LoginUseCase(
         if(password.isBlank()) {
             return LoginResult.PASSWORD_EMPTY
         }
+        if(!validator.isEmailValid(username)) {
+            return LoginResult.INVALID_EMAIL
+        }
         return when(val repoResult = repository.logIn(username, password)) {
             is BancashResult.Error -> {
                 when(repoResult.error) {
@@ -38,6 +41,7 @@ class LoginUseCase(
         SUCCESS,
         USERNAME_EMPTY,
         PASSWORD_EMPTY,
+        INVALID_EMAIL,
         INVALID_INPUT,
         EXTERNAL_ERROR
     }

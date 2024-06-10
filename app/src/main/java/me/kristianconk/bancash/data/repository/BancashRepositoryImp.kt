@@ -5,7 +5,6 @@ import android.net.Uri
 import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -86,8 +85,8 @@ class BancashRepositoryImp(
             } ?: run {
                 return BancashResult.Error(DataError.NetworkError.UNKNOWN)
             }
-        } catch (credentials: FirebaseAuthInvalidCredentialsException) {
-            Log.w("BANCASH-REPO", "error credenciales", credentials)
+        } catch (ex: Exception) {
+            Log.w("BANCASH-REPO", "error al acceder", ex)
             return BancashResult.Error(DataError.NetworkError.BAD_REQUEST)
         }
     }
