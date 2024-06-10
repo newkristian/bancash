@@ -19,7 +19,6 @@ class SignupViewModel(
     private var _email: String = ""
     private var _password: String = ""
     private var _photo: Uri? = null
-    private var _photoFile: File? = null
     private val _uiState = MutableStateFlow(SignupUiState())
     private val _sideEffects = MutableStateFlow(BancashEvent(""))
     val uiState = _uiState.asStateFlow()
@@ -41,9 +40,8 @@ class SignupViewModel(
         _password = password
     }
 
-    fun onPhotoSelected(photoUri: Uri, file: File) {
+    fun onPhotoSelected(photoUri: Uri) {
         _photo = photoUri
-        _photoFile = file
     }
 
     fun onSignupClick() {
