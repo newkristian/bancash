@@ -7,6 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import me.kristianconk.bancash.presentation.features.detail.MovementDetailScreen
 import me.kristianconk.bancash.presentation.features.home.HomeActions
 import me.kristianconk.bancash.presentation.features.home.HomeScreen
 import me.kristianconk.bancash.presentation.features.home.HomeViewModel
@@ -24,10 +25,10 @@ fun HomeNavHost(
     val sideEffect = homeViewModel.sideEffects.collectAsState().value
     LaunchedEffect(key1 = sideEffect) {
         sideEffect.getIfNotConsumed()?.let {
-            if( (it as String) == NAV_ACTIVITY_LOGIN) {
+            if ((it as String) == NAV_ACTIVITY_LOGIN) {
                 NavUtils.navToLogin(activity)
             }
-            if( (it as String) == NAVHOST_ROUTE_MOVEMENT_DETAIL) {
+            if ((it as String) == NAVHOST_ROUTE_MOVEMENT_DETAIL) {
                 navController.navigate(NAVHOST_ROUTE_MOVEMENT_DETAIL)
             }
         }
@@ -39,11 +40,15 @@ fun HomeNavHost(
                 uiState = state,
                 actions = HomeActions(
                     onSignOut = homeViewModel::onSignOut,
-                    onMovementClick = homeViewModel::onMovementClick)
+                    onMovementClick = homeViewModel::onMovementClick
+                )
             )
         }
         composable(route = NAVHOST_ROUTE_MOVEMENT_DETAIL) {
-
+            homeViewModel.selectedMovement?.let { mov -> MovementDetailScreen(movement = mov) }
+                ?: run {
+                    navController.popBackStack()
+                }
         }
     }
 }

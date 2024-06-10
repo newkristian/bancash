@@ -1,8 +1,6 @@
 package me.kristianconk.bancash.presentation.features.movements
 
 import android.icu.text.NumberFormat
-import android.icu.util.Currency
-import android.icu.util.CurrencyAmount
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,9 +17,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import me.kristianconk.bancash.R
 import me.kristianconk.bancash.domain.model.Movement
 import me.kristianconk.bancash.domain.model.MovementType
+import me.kristianconk.bancash.presentation.utils.getTextForMovementType
+import me.kristianconk.bancash.presentation.utils.getVectorForMovementType
 import me.kristianconk.bancash.ui.theme.BanCashTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -46,28 +45,6 @@ fun MovementRow(movement: Movement, modifier: Modifier = Modifier) {
         }
         Spacer(modifier = Modifier.weight(1f))
         Text(text = NumberFormat.getCurrencyInstance().format(movement.amount), modifier = Modifier.padding(8.dp))
-    }
-}
-
-private fun getVectorForMovementType(type: MovementType): Int {
-    return when (type) {
-        MovementType.PAYMENT -> R.drawable.payment
-        MovementType.WITHDRAW -> R.drawable.withdraw
-        MovementType.PURCHASE -> R.drawable.purchase
-        MovementType.REFUND -> R.drawable.refund
-        MovementType.TRANSFER -> R.drawable.transfer
-        MovementType.UNKNOWN -> R.drawable.error
-    }
-}
-
-private fun getTextForMovementType(type: MovementType): String {
-    return when (type) {
-        MovementType.PAYMENT -> "Depósito"
-        MovementType.WITHDRAW -> "Retiro"
-        MovementType.PURCHASE -> "Compra"
-        MovementType.REFUND -> "Reembolso"
-        MovementType.TRANSFER -> "Transferencia"
-        MovementType.UNKNOWN -> "Desconocido"
     }
 }
 

@@ -3,6 +3,7 @@ package me.kristianconk.bancash.presentation.features.home
 import android.icu.text.NumberFormat
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -113,7 +114,9 @@ fun HomeScreen(
                 }
             }
             items(items = uiState.movements, key = { it.id }) {
-                MovementRow(movement = it)
+                MovementRow(movement = it, modifier = Modifier.clickable {
+                    actions.onMovementClick(it)
+                })
             }
         }
     }
