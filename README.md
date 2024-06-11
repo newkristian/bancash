@@ -33,6 +33,12 @@ Despues de validar que todos los datos de entrada son correctos se crea el usuar
 Al acceder por primera vez al balance y movimientos se genera la cuenta con un movimiento de una promocion de $100 por nuevo usuario.
 
 ## Ejecucion
+
 Por buenas prácticas y seguridad no se incluye el archivo de configuracion de Firebase `google-services.json` en el repositorio de código. 
 En su lugar puedes incluir tu propio archivo de configuracion de manera local o ejecutar la compilacion en GitHub (generate-apk-aab-debug-release) donde se obtiene el archivo guardado de manera segura 
 
+Se puede usar el usuario sabanero@gmail.com con password ABC123xyz para visualizar los diferentes tipos de movimientos
+
+## Pruebas unitarias
+
+Se incluyen pruebas unitarias de la capa de dominio la cual es la relacionada al funcionamiento sin presentación

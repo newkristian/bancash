@@ -5,6 +5,9 @@ import me.kristianconk.bancash.domain.model.DataError
 import me.kristianconk.bancash.domain.repository.BancashRepository
 import me.kristianconk.bancash.domain.utils.UserDataValidator
 
+/**
+ * Caso de uso de ingreso a la aplicacion, valida los campos de usuario/email y password
+ */
 class LoginUseCase(
     val validator: UserDataValidator,
     val repository: BancashRepository
@@ -42,7 +45,7 @@ class LoginUseCase(
         USERNAME_EMPTY,
         PASSWORD_EMPTY,
         INVALID_EMAIL,
-        INVALID_INPUT,
-        EXTERNAL_ERROR
+        INVALID_INPUT, // cuando son credenciales incorrectas
+        EXTERNAL_ERROR // casos como fallo de internet
     }
 }

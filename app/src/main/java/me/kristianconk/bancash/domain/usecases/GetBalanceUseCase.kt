@@ -4,6 +4,9 @@ import me.kristianconk.bancash.domain.model.BancashResult
 import me.kristianconk.bancash.domain.model.UserBalance
 import me.kristianconk.bancash.domain.repository.BancashRepository
 
+/**
+ * Caso de uso para recuperar el saldo de la cuenta del cliente
+ */
 class GetBalanceUseCase(
     val repository: BancashRepository
 ) {

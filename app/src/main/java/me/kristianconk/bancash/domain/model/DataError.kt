@@ -1,6 +1,11 @@
 package me.kristianconk.bancash.domain.model
 
+
+/**
+ * Posibles errores en la capa de datos
+ */
 sealed interface DataError : BancashError {
+
     enum class NetworkError : DataError {
         REQUEST_TIMEOUT,
         NO_INTERNET,

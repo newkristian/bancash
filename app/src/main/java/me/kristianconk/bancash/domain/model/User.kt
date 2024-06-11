@@ -1,5 +1,8 @@
 package me.kristianconk.bancash.domain.model
 
+/**
+ * Representa un usuario registrado en la aplicacion
+ */
 data class User(
     val id:String,
     val username:String, //name and lastName
@@ -7,6 +10,9 @@ data class User(
     val state:UserState
 )
 
+/**
+ * Posibles estados de un usuario
+ */
 enum class UserState{
     ACTIVE,
     BLOCKED,

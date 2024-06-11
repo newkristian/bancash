@@ -1,9 +1,13 @@
 package me.kristianconk.bancash.domain.utils
 
-import me.kristianconk.bancash.domain.model.BancashError
-import me.kristianconk.bancash.domain.model.BancashResult
+import java.util.regex.Pattern
 
+/**
+ * Clase de utilida para validar que un email o un password son correctos
+ */
 class UserDataValidator {
+
+    private val emailPattern: Pattern = Pattern.compile(EMAIL_REGEX_PATTERN)
     fun isValidPassword(password: String): Boolean {
         if (password.length < PASSWORD_MIN_LENGTH)
             return false
@@ -16,12 +20,13 @@ class UserDataValidator {
         return true
     }
 
-    fun validateUser(username: String): BancashResult<Unit, BancashError> {
-
-        return BancashResult.Success(Unit)
+    fun isEmailValid(email: String): Boolean {
+        return emailPattern.matcher(email).matches()
     }
 
-    fun isEmailValid(email: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    companion object {
+        // basado en la recomendacion OWASP
+        // https://owasp.org/www-community/OWASP_Validation_Regex_Repository
+        const val EMAIL_REGEX_PATTERN = ("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")
     }
 }

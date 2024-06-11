@@ -80,6 +80,9 @@ dependencies {
     implementation(libs.google.firebase.auth)
     //Test
     testImplementation(libs.junit)
+    testImplementation(libs.io.mockk.core)
+    testImplementation(libs.io.mockk.android)
+    testImplementation(libs.kotlin.coroutine.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

@@ -6,6 +6,10 @@ import me.kristianconk.bancash.domain.model.DataError
 import me.kristianconk.bancash.domain.repository.BancashRepository
 import me.kristianconk.bancash.domain.utils.UserDataValidator
 
+/**
+ * Caso de uso de un registro de usuario nuevo, valida los campos de email password, nombre y apellido.
+ * Verifica que se incluye una foto (selfie) pero no esta conectado a ningun motor de reconocimiento de rostros o datos asi cualquier foto pasa el filtro
+ */
 class SignUpUseCase(
     val repository: BancashRepository,
     val validator: UserDataValidator

@@ -4,6 +4,9 @@ import me.kristianconk.bancash.domain.model.BancashResult
 import me.kristianconk.bancash.domain.model.Movement
 import me.kristianconk.bancash.domain.repository.BancashRepository
 
+/**
+ * Caso de uso para recuperar el listado de movimientos del cliente
+ */
 class GetMovementsUseCase(
     val repository: BancashRepository
 ) {
