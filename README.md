@@ -34,5 +34,5 @@ Al acceder por primera vez al balance y movimientos se genera la cuenta con un m
 
 ## Ejecucion
 Por buenas prácticas y seguridad no se incluye el archivo de configuracion de Firebase `google-services.json` en el repositorio de código. 
-En su lugar puedes incluir tu propio archivo de configuracion de manera local o ejecutar la compilacion en GitHub donde se tiene el archivo guardado de manera segura 
+En su lugar puedes incluir tu propio archivo de configuracion de manera local o ejecutar la compilacion en GitHub (generate-apk-aab-debug-release) donde se obtiene el archivo guardado de manera segura 
 

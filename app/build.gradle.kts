@@ -50,14 +50,6 @@ android {
     }
 }
 
-tasks.register("generateVersionTxt") {
-    doLast {
-        val file = file("./version.txt")
-        file.createNewFile()
-        file.writeText(android.defaultConfig.versionName ?: "0.1")
-    }
-}
-
 dependencies {
 
     implementation(libs.androidx.core.ktx)
