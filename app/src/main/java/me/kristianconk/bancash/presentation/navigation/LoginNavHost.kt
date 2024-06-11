@@ -14,12 +14,14 @@ import me.kristianconk.bancash.presentation.features.login.LoginScreen
 import me.kristianconk.bancash.presentation.features.login.LoginViewModel
 import me.kristianconk.bancash.presentation.features.signup.SignupActions
 import me.kristianconk.bancash.presentation.features.signup.SignupScreen
+import me.kristianconk.bancash.presentation.features.signup.SignupSuccessScreen
 import me.kristianconk.bancash.presentation.features.signup.SignupViewModel
 import me.kristianconk.bancash.presentation.features.splash.SplashScreen
 import me.kristianconk.bancash.presentation.features.splash.SplashViewModel
 import me.kristianconk.bancash.presentation.utils.NAVHOST_ROUTE_LOGIN
 import me.kristianconk.bancash.presentation.utils.NAVHOST_ROUTE_SIGNUP
 import me.kristianconk.bancash.presentation.utils.NAVHOST_ROUTE_SPLASH
+import me.kristianconk.bancash.presentation.utils.NAVHOST_ROUTE_SUCCESS
 import me.kristianconk.bancash.presentation.utils.NAV_ACTIVITY_HOME
 import me.kristianconk.bancash.presentation.utils.NavUtils
 
@@ -36,7 +38,11 @@ fun LoginNavHost(
     LaunchedEffect(key1 = sideEffectSignup) {
         sideEffectSignup.getIfNotConsumed()?.let {
             if ((it as String) == NAV_ACTIVITY_HOME) {
-                NavUtils.navToHome(activity)
+                navController.navigate(
+                    route = NAVHOST_ROUTE_SUCCESS,
+                    navOptions = NavOptions.Builder().apply { setLaunchSingleTop(true) }
+                        .build()
+                )
             }
         }
     }
@@ -101,6 +107,11 @@ fun LoginNavHost(
                         )
                     }
                 ))
+            }
+        }
+        composable(route = NAVHOST_ROUTE_SUCCESS) {
+            SignupSuccessScreen {
+                NavUtils.navToHome(activity)
             }
         }
     }

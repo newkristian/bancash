@@ -76,10 +76,9 @@ fun ImagePicker(
         ActivityResultContracts.RequestPermission()
     ) {
         if (it) {
-            Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show()
             cameraLauncher.launch(uri)
         } else {
-            Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Es necesario el permiso de camara", Toast.LENGTH_SHORT).show()
         }
     }
 
