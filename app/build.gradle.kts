@@ -13,7 +13,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -47,6 +47,14 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+}
+
+tasks.register("generateVersionTxt") {
+    doLast {
+        val file = file("./version.txt")
+        file.createNewFile()
+        file.writeText(android.defaultConfig.versionName ?: "0.1")
     }
 }
 

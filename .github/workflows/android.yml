@@ -1,4 +1,4 @@
-name: Android Build
+name: Build & Publish Debug APK
 
 on:
   push:
@@ -22,8 +22,18 @@ jobs:
     - name: Load Google Service file
       env:
         DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
-      run: echo $DATA | base64 -di > app/google-services.json
+      run: echo $DATA | base64 -d -i - -o app/google-services.json
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug
+    - name: Generate version.txt for Hub release
+      run: ./gradlew generateVersionTxt
+    - name: Releasing using Hub
+      uses: valley-fordham/action-release-debugapk@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN_CLASSIC_ONLY_REPO }}
+        APP_FOLDER: app-debug
+        RELEASE_TITLE: New Build
