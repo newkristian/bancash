@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.kristianconk.bancash.domain.usecases.SignUpUseCase
 import me.kristianconk.bancash.presentation.events.BancashEvent
-import java.io.File
+import me.kristianconk.bancash.presentation.utils.NAV_ACTIVITY_HOME
 
 class SignupViewModel(
     val useCase: SignUpUseCase
@@ -42,6 +42,7 @@ class SignupViewModel(
 
     fun onPhotoSelected(photoUri: Uri) {
         _photo = photoUri
+        _uiState.update { it.copy(photoError = null) }
     }
 
     fun onSignupClick() {
@@ -51,33 +52,32 @@ class SignupViewModel(
             when (result) {
                 SignUpUseCase.SignupResult.SUCCESS -> {
                     _uiState.value = SignupUiState()
-                    _sideEffects.value = BancashEvent("HOME")
+                    _sideEffects.value = BancashEvent(NAV_ACTIVITY_HOME)
                 }
-
-                SignUpUseCase.SignupResult.EMAIL_EMPTY -> _uiState.update { it.copy(emailError = "No puede ser vacío") }
+                SignUpUseCase.SignupResult.EMAIL_EMPTY -> _uiState.update { it.copy(isLoading = false, emailError = "No puede ser vacío") }
                 SignUpUseCase.SignupResult.PASSWORD_EMPTY -> _uiState.update {
                     it.copy(
+                        isLoading = false,
                         passwordError = "No puede ser vacío"
                     )
                 }
-
-                SignUpUseCase.SignupResult.NAME_EMPTY -> _uiState.update { it.copy(nameError = "No puede ser vacío") }
+                SignUpUseCase.SignupResult.NAME_EMPTY -> _uiState.update { it.copy(isLoading = false, nameError = "No puede ser vacío") }
                 SignUpUseCase.SignupResult.LASTNAME_EMPTY -> _uiState.update {
                     it.copy(
+                        isLoading = false,
                         lastnameError = "No puede ser vacío"
                     )
                 }
-
-                SignUpUseCase.SignupResult.INVALID_EMAIL -> _uiState.update { it.copy(emailError = "El correo debe tener el formato correcto") }
+                SignUpUseCase.SignupResult.INVALID_EMAIL -> _uiState.update { it.copy(isLoading = false, emailError = "El correo debe tener el formato correcto") }
                 SignUpUseCase.SignupResult.INVALID_PASSWORD -> _uiState.update {
                     it.copy(
+                        isLoading = false,
                         passwordError = "mayusculas, minusculas, numero, 8 digitos"
                     )
                 }
-
-                SignUpUseCase.SignupResult.INVALID_INPUT -> _uiState.update { it.copy(message = "Los datos no son válidos") }
-                SignUpUseCase.SignupResult.REQUIRES_PHOTO -> _uiState.update { it.copy(photoError = "Se necesita una foto selfie") }
-                SignUpUseCase.SignupResult.EXTERNAL_ERROR -> _uiState.update { it.copy(message = "Hubo un error intente de nuevo más tarde") }
+                SignUpUseCase.SignupResult.INVALID_INPUT -> _uiState.update { it.copy(isLoading = false, message = "Los datos no son válidos") }
+                SignUpUseCase.SignupResult.REQUIRES_PHOTO -> _uiState.update { it.copy(isLoading = false, photoError = "Se necesita una foto selfie") }
+                SignUpUseCase.SignupResult.EXTERNAL_ERROR -> _uiState.update { it.copy(isLoading = false, message = "Hubo un error intente de nuevo más tarde") }
             }
         }
     }

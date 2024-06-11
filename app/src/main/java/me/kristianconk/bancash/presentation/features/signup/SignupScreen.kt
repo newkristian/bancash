@@ -12,24 +12,31 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import me.kristianconk.bancash.presentation.components.EmailInput
 import me.kristianconk.bancash.presentation.components.ImagePicker
+import me.kristianconk.bancash.presentation.components.PasswordInput
+import me.kristianconk.bancash.presentation.utils.ConnectionState
+import me.kristianconk.bancash.presentation.utils.connectivityState
 import me.kristianconk.bancash.ui.theme.BanCashTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
 @Composable
 fun SignupScreen(
     state: SignupUiState,
@@ -39,6 +46,15 @@ fun SignupScreen(
     BackHandler(enabled = true) {
         // no esta permitido el back
     }
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(key1 = state.message) {
+        state.message?.let {
+            if (it.isNotEmpty())
+                snackbarHostState.showSnackbar(message = it)
+        }
+    }
+    val connection by connectivityState()
+    val isConnected = connection === ConnectionState.Available
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -56,6 +72,9 @@ fun SignupScreen(
                 )
             )
         },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
     ) { paddVals ->
         var name by remember {
             mutableStateOf("")
@@ -96,30 +115,20 @@ fun SignupScreen(
                             Text(text = it, color = MaterialTheme.colorScheme.error)
                         }
                     })
-                OutlinedTextField(value = email, onValueChange = {
+                EmailInput(email = email, emailError = state.emailError, onValueChange = {
                     email = it
                     actions.onEmailChange(it)
-                }, label = { Text(text = "Email") },
-                    isError = state.emailError != null,
-                    supportingText = {
-                        state.emailError?.let {
-                            Text(text = it, color = MaterialTheme.colorScheme.error)
-                        }
-                    })
-                OutlinedTextField(value = password, onValueChange = {
-                    password = it
-                    actions.onPasswordChange(it)
-                }, label = { Text(text = "Password") },
-                    isError = state.passwordError != null,
-                    supportingText = {
-                        state.passwordError?.let {
-                            Text(text = it, color = MaterialTheme.colorScheme.error)
-                        }
-                    },
-                    visualTransformation = PasswordVisualTransformation()
+                })
+                PasswordInput(
+                    password = password,
+                    passwordError = state.passwordError,
+                    onValueChange = {
+                        password = it
+                        actions.onPasswordChange(it)
+                    }
                 )
-                ImagePicker(onImageSelected = actions.onPhotoSelected, modifier = Modifier.size(width = 180.dp, height = 180.dp))
-                Button(onClick = actions.onSignupClick) {
+                ImagePicker(onImageSelected = actions.onPhotoSelected, modifier = Modifier.size(width = 180.dp, height = 180.dp), errorMessage = state.photoError)
+                Button(onClick = actions.onSignupClick, enabled = isConnected) {
                     Text(text = "Registrar")
                 }
                 Button(onClick = actions.onLoginClick) {

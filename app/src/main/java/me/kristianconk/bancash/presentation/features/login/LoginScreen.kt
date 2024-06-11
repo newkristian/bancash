@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -23,17 +22,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
+import me.kristianconk.bancash.presentation.components.EmailInput
+import me.kristianconk.bancash.presentation.components.PasswordInput
 import me.kristianconk.bancash.presentation.utils.ConnectionState
 import me.kristianconk.bancash.presentation.utils.connectivityState
 import me.kristianconk.bancash.ui.theme.BanCashTheme
@@ -89,29 +87,18 @@ fun LoginScreen(
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                OutlinedTextField(value = email, onValueChange = {
+                EmailInput(email = email, emailError = state.emailError, onValueChange = {
                     email = it
                     actions.onEmailChange(it)
-                }, label = { Text(text = "Email") },
-                    isError = state.emailError != null,
-                    supportingText = {
-                        state.emailError?.let {
-                            Text(text = it, color = MaterialTheme.colorScheme.error)
-                        }
-                    })
-                OutlinedTextField(value = password, onValueChange = {
-                    password = it
-                    actions.onPasswordChange(it)
-                }, label = { Text(text = "Password") },
-                    isError = state.passwordError != null,
-                    supportingText = {
-                        state.passwordError?.let {
-                            Text(text = it, color = MaterialTheme.colorScheme.error)
-                        }
-                    },
-                    visualTransformation = PasswordVisualTransformation()
+                })
+                PasswordInput(
+                    password = password,
+                    passwordError = state.passwordError,
+                    onValueChange = {
+                        password = it
+                        actions.onPasswordChange(it)
+                    }
                 )
                 Button(onClick = actions.onLoginClick, enabled = isConnected) {
                     Text(text = "Login")

@@ -85,21 +85,22 @@ fun HomeScreen(
             ) {
             item(key = "avatar") {
                 Box(modifier = Modifier.fillMaxWidth()) {
-                    uiState.avatarUrl?.let {
-                        AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current).data(it).crossfade(true).build(),
+                    if (uiState.avatarUrl.isEmpty()) {
+                        Image(
+                            imageVector = ImageVector.vectorResource(id = R.drawable.empty_avatar),
                             contentDescription = "avatar",
-                            placeholder = painterResource(id = R.drawable.empty_avatar),
-                            contentScale = ContentScale.Inside,
                             modifier = Modifier
                                 .padding(8.dp)
                                 .size(width = 180.dp, height = 180.dp)
                                 .align(Alignment.Center)
                         )
-                    } ?: run {
-                        Image(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.empty_avatar),
+                    } else {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(uiState.avatarUrl).crossfade(true).build(),
                             contentDescription = "avatar",
+                            placeholder = painterResource(id = R.drawable.empty_avatar),
+                            contentScale = ContentScale.Inside,
                             modifier = Modifier
                                 .padding(8.dp)
                                 .size(width = 180.dp, height = 180.dp)
