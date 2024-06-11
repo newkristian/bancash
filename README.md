@@ -26,6 +26,13 @@ La base de datos consta de las siguientes colecciones:
 La pantalla de registro recopila datos de nombre, apellido, correo, password y una foto selfie. 
 Despues de validar que todos los datos de entrada son correctos se crea el usuario con FirebaseAuth si es exitoso se sube la foto selfie a Firebase Storage y se recupera la URL la cual se guarda en la estructura del usuario
 
+!!!Todo se orquesta desde la app y no tiene forma de recuperarse si se llegara a cortar el flujo
+
 ## Balance y movimientos
 
-luego se genera la cuenta con un movimiento de una promocion de $100 por nuevo usuario. Todo se orquesta desde la app y no tiene forma de recuperarse si se llegara a cortar el flujo
+Al acceder por primera vez al balance y movimientos se genera la cuenta con un movimiento de una promocion de $100 por nuevo usuario.
+
+## Ejecucion
+Por buenas prácticas y seguridad no se incluye el archivo de configuracion de Firebase `google-services.json` en el repositorio de código. 
+En su lugar puedes incluir tu propio archivo de configuracion de manera local o ejecutar la compilacion en GitHub donde se tiene el archivo guardado de manera segura 
+
